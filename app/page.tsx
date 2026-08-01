@@ -2,6 +2,35 @@
 
 import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
+import WaterRippleImage from "./WaterRippleImage";
+import CustomCursor from "./CustomCursor";
+
+type Theme = "signal" | "momo" | "emerald" | "lagoon" | "burgundy" | "bay" | "oxford" | "azure" | "heritage";
+type Typeface = "new-amsterdam" | "alumni" | "text-me-one" | "syne" | "figtree" | "anta" | "quattrocento" | "zodiak" | "chillax";
+
+const themes: { id: Theme; name: string; colors: string[] }[] = [
+  { id: "signal", name: "Mirage Signal", colors: ["#16232A", "#FF5B04", "#075056", "#E4EEF0"] },
+  { id: "momo", name: "Momo Trust", colors: ["#021024", "#052659", "#5483B3", "#7DA0CA", "#C1E8FF"] },
+  { id: "emerald", name: "Emerald Club", colors: ["#154230", "#5D1E21", "#101111", "#A6824A", "#E6E2DA"] },
+  { id: "lagoon", name: "Teal Lagoon", colors: ["#0F2A2A", "#00BFA6", "#D9FAF4"] },
+  { id: "burgundy", name: "Burgundy Study", colors: ["#722F37", "#8B1538", "#A0522D", "#F5F5DC"] },
+  { id: "bay", name: "Bay View", colors: ["#5596A5", "#0A4B61", "#2FA1B7", "#BAC8DB", "#C6B08F"] },
+  { id: "oxford", name: "Oxford", colors: ["#D9B970", "#102D4F", "#1E4268", "#55595D", "#D4D5D6"] },
+  { id: "azure", name: "Azure", colors: ["#1E90FF", "#00BFFF", "#87CEEB", "#B0E0E6", "#ADD8E6"] },
+  { id: "heritage", name: "Heritage", colors: ["#0E0E0D", "#1C1C1A", "#C9A24B", "#9A958C", "#F2EFE9"] },
+];
+
+const typefaces: { id: Typeface; name: string }[] = [
+  { id: "new-amsterdam", name: "New Amsterdam" },
+  { id: "alumni", name: "Alumni Pinstripe" },
+  { id: "text-me-one", name: "Text Me One" },
+  { id: "syne", name: "Syne" },
+  { id: "figtree", name: "Figtree" },
+  { id: "anta", name: "Anta" },
+  { id: "quattrocento", name: "Quattrocento" },
+  { id: "zodiak", name: "Zodiak" },
+  { id: "chillax", name: "Chillax" },
+];
 
 const pillars = [
   ["01", "Capital", "Patient capital, thoughtfully aligned with generational ambition."],
@@ -31,13 +60,106 @@ export default function Home() {
   const [menu, setMenu] = useState(false);
   const [pointer, setPointer] = useState({ x: 50, y: 38 });
   const [sent, setSent] = useState(false);
+  const [theme, setTheme] = useState<Theme>("momo");
+  const [typeface, setTypeface] = useState<Typeface>("syne");
+  const [drawerOpen, setDrawerOpen] = useState(false);
+  const upperPillars = useRef<HTMLDivElement>(null);
+  const lowerPillars = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const saved = (localStorage.getItem("io8-theme") || localStorage.getItem("1o8-theme")) as Theme | null;
+    const savedTypeface = (localStorage.getItem("io8-typeface") || localStorage.getItem("1o8-typeface")) as Typeface | null;
+    if (saved && themes.some((item) => item.id === saved)) setTheme(saved);
+    if (savedTypeface && typefaces.some((item) => item.id === savedTypeface)) setTypeface(savedTypeface);
+  }, []);
+
+  useEffect(() => {
+    localStorage.setItem("io8-theme", theme);
+    localStorage.setItem("io8-typeface", typeface);
+  }, [theme, typeface]);
+
+  useEffect(() => {
+    const upper = upperPillars.current;
+    const lower = lowerPillars.current;
+    if (!upper || !lower) return;
+
+    const cardStep = () => {
+      const card = upper.firstElementChild as HTMLElement | null;
+      return card ? card.getBoundingClientRect().width + 16 : innerWidth * .5;
+    };
+    upper.scrollLeft = upper.scrollWidth / 3;
+    lower.scrollLeft = lower.scrollWidth * 2 / 3;
+
+    const timer = window.setInterval(() => {
+      if (upper.scrollLeft >= upper.scrollWidth * 2 / 3) upper.scrollTo({ left: upper.scrollWidth / 3, behavior: "auto" });
+      if (lower.scrollLeft <= lower.scrollWidth / 3) lower.scrollTo({ left: lower.scrollWidth * 2 / 3, behavior: "auto" });
+      upper.scrollBy({ left: cardStep(), behavior: "smooth" });
+      lower.scrollBy({ left: -cardStep(), behavior: "smooth" });
+    }, 2700);
+
+    return () => window.clearInterval(timer);
+  }, []);
+
+  const foundationLoop = Array.from({ length: 3 }, () => pillars.slice(0, 4)).flat();
+  const connectionLoop = Array.from({ length: 3 }, () => pillars.slice(4)).flat();
 
   return (
-    <main onMouseMove={(e) => setPointer({ x: e.clientX / innerWidth * 100, y: e.clientY / innerHeight * 100 })}>
+    <main data-theme={theme} data-font={typeface} onMouseMove={(e) => setPointer({ x: e.clientX / innerWidth * 100, y: e.clientY / innerHeight * 100 })}>
+      <CustomCursor />
       <div className="grain" aria-hidden />
+      <button
+        className={`edit-design-button ${drawerOpen ? "drawer-is-open" : ""}`}
+        type="button"
+        onClick={() => setDrawerOpen(!drawerOpen)}
+        aria-expanded={drawerOpen}
+        aria-controls="design-drawer"
+        aria-label="Edit colors and typography"
+      >
+        <span>✎</span><b>Edit</b>
+      </button>
+      <aside id="design-drawer" className={`theme-switcher ${drawerOpen ? "open" : ""}`} aria-label="Edit colors and typography" aria-hidden={!drawerOpen}>
+        <div className="drawer-head">
+          <div><small>Io8 Design System</small><h2>Set the atmosphere.</h2></div>
+          <button type="button" onClick={() => setDrawerOpen(false)} aria-label="Close design panel">×</button>
+        </div>
+        <span className="theme-caption">Palette</span>
+        <div className="theme-options">
+          {themes.map((item) => (
+            <button
+              key={item.id}
+              type="button"
+              className={theme === item.id ? "active" : ""}
+              onClick={() => setTheme(item.id)}
+              aria-pressed={theme === item.id}
+              aria-label={`Use ${item.name} theme`}
+              title={item.name}
+            >
+              <i>{item.colors.map((color) => <b key={color} style={{ background: color }} />)}</i>
+              <span>{item.name}</span>
+            </button>
+          ))}
+        </div>
+        <span className="theme-caption font-caption">Typeface</span>
+        <div className="font-options">
+          {typefaces.map((item) => (
+            <button
+              key={item.id}
+              type="button"
+              data-preview-font={item.id}
+              className={typeface === item.id ? "active" : ""}
+              onClick={() => setTypeface(item.id)}
+              aria-pressed={typeface === item.id}
+              aria-label={`Use ${item.name} typeface`}
+              title={item.name}
+            >
+              <b>Aa</b><span>{item.name}</span>
+            </button>
+          ))}
+        </div>
+      </aside>
       <nav className="nav">
-        <Link className="mark" href="/">1o8</Link>
-        <div className="nav-center">One Hundred Eight</div>
+        <Link className="mark brand-logo" href="/" aria-label="Io8 home"><img src="/io8-logo.svg" alt="Io8" /></Link>
+        <div className="nav-center" aria-hidden />
         <button className="menu-button" onClick={() => setMenu(!menu)} aria-expanded={menu} aria-label="Toggle navigation">
           <span /> <span />
         </button>
@@ -48,11 +170,12 @@ export default function Home() {
         </div>
       </nav>
 
-      <section className="hero" style={{"--mx": `${pointer.x}%`, "--my": `${pointer.y}%`} as React.CSSProperties}>
+      <div className="hero-chapter" style={{"--mx": `${pointer.x}%`, "--my": `${pointer.y}%`} as React.CSSProperties}>
+      <section className="hero">
         <div className="ambient" aria-hidden />
         <div className="hero-index">Private members&apos; circle<br />India · Est. 2026</div>
         <div className="hero-copy">
-          <div className="eyebrow"><span /> One Hundred Eight</div>
+          <div className="eyebrow"><span /> Io8</div>
           <h1>For families who build<br />what <em>outlives</em> them.</h1>
           <p>A private members&apos; circle for India&apos;s most established founders, families and investors.</p>
           <Link className="outline-link" href="/invitation"><span>Request invitation</span><b>↗</b></Link>
@@ -60,19 +183,22 @@ export default function Home() {
         <div className="scroll-note">Scroll to enter <span>↓</span></div>
       </section>
 
+      <WaterRippleImage />
+
       <section className="statement">
         <Reveal>
           <p>Not a network.</p>
           <h2>A private circle.</h2>
         </Reveal>
       </section>
+      </div>
 
       <section className="about" id="circle">
         <Reveal className="section-label">01 / The Circle</Reveal>
         <Reveal className="about-grid">
           <h2>Built for the<br />long horizon.</h2>
           <div>
-            <p>1o8 is a private institution for families shaping the next century. A place where capital, intelligence and conviction meet without spectacle.</p>
+            <p>Io8 is a private institution for families shaping the next century. A place where capital, intelligence and conviction meet without spectacle.</p>
             <p>Membership is deliberately limited. Every relationship is considered. Every exchange begins with trust.</p>
           </div>
         </Reveal>
@@ -81,14 +207,39 @@ export default function Home() {
       <section className="pillars" id="pillars">
         <Reveal className="pillars-head">
           <div className="section-label">02 / The Seven Pillars</div>
-          <h2>What endures.</h2>
+          <div className="pillars-title">
+            <h2>What endures.</h2>
+            <p>Seven principles. Two perspectives. One enduring circle.</p>
+          </div>
         </Reveal>
-        <div className="pillar-list">
-          {pillars.map(([number, title, copy]) => (
-            <Reveal className="pillar" key={title}>
-              <span>{number}</span><h3>{title}</h3><p>{copy}</p><i>↗</i>
-            </Reveal>
-          ))}
+        <div className="pillar-sliders">
+          <div className="pillar-slider">
+            <div className="pillar-rail upper" ref={upperPillars}>
+              {foundationLoop.flatMap(([number, title, copy], index) => [
+                <article className="pillar-card image-card" key={`${title}-${index}-image`} aria-hidden={index < 4 || index >= 8}>
+                  <div className={`pillar-card-art atlas-${index % 4 + 1}`} role="img" aria-label={`${title}, an editorial interpretation`} />
+                  <div className="image-card-label"><span>{number}</span><h3>{title}</h3></div>
+                </article>,
+                <article className="pillar-card text-card" key={`${title}-${index}-text`} aria-hidden={index < 4 || index >= 8}>
+                  <div className="pillar-card-copy"><span>{number}</span><h3>{title}</h3><p>{copy}</p><i>Explore ↗</i></div>
+                </article>
+              ])}
+            </div>
+          </div>
+          <div className="pillar-slider lower-slider">
+            <div className="pillar-rail lower" ref={lowerPillars}>
+              {connectionLoop.flatMap(([number, title, copy], index) => [
+                <article className="pillar-card image-card" key={`${title}-${index}-image`} aria-hidden={index < 3 || index >= 6}>
+                  <div className={`pillar-card-art atlas-${index % 3 + 5}`} role="img" aria-label={`${title}, an editorial interpretation`} />
+                  <div className="image-card-label"><span>{number}</span><h3>{title}</h3></div>
+                </article>,
+                <article className="pillar-card text-card" key={`${title}-${index}-text`} aria-hidden={index < 3 || index >= 6}>
+                  <div className="pillar-card-copy"><span>{number}</span><h3>{title}</h3><p>{copy}</p><i>Explore ↗</i></div>
+                </article>
+              ])}
+            </div>
+          </div>
+          <p className="slider-hint">Drag to explore · Two continuous perspectives</p>
         </div>
       </section>
 
@@ -121,16 +272,16 @@ export default function Home() {
             <div className="field-row"><label>Name<input required name="name" /></label><label>Email<input required type="email" name="email" /></label></div>
             <div className="field-row"><label>Company<input name="company" /></label><label>Family office<input name="office" /></label></div>
             <label>Invitation code <small>Optional</small><input name="code" /></label>
-            <label>Why 1o8?<textarea name="reason" rows={2} /></label>
+            <label>Why Io8?<textarea name="reason" rows={2} /></label>
             <button className="outline-link" type="submit"><span>Request invitation</span><b>↗</b></button>
           </form>}
         </Reveal>
       </section>
 
       <footer>
-        <div className="footer-mark">1o8</div>
+        <div className="footer-logo"><img src="/io8-logo.svg" alt="Io8" /></div>
         <p>Private.<br />Confidential.<br />By invitation.</p>
-        <div className="footer-meta"><span>One Hundred Eight © 2026</span><Link href="/signin">Member access ↗</Link></div>
+        <div className="footer-meta"><span>Io8 © 2026</span><Link href="/signin">Member access ↗</Link></div>
       </footer>
     </main>
   );
