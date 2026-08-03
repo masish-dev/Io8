@@ -70,18 +70,29 @@ export default function Home() {
     const chapter = heroChapter.current;
     if (!chapter) return;
     let frame = 0;
-    let x = 50;
-    let y = 38;
+    let currentX = chapter.clientWidth * .5;
+    let currentY = Math.min(innerHeight * .38, chapter.clientHeight * .3);
+    let targetX = currentX;
+    let targetY = currentY;
     const paint = () => {
-      chapter.style.setProperty("--mx", `${x}%`);
-      chapter.style.setProperty("--my", `${y}%`);
-      frame = 0;
+      currentX += (targetX - currentX) * .12;
+      currentY += (targetY - currentY) * .12;
+      chapter.style.setProperty("--mx", `${currentX}px`);
+      chapter.style.setProperty("--my", `${currentY}px`);
+      if (Math.abs(targetX - currentX) > .25 || Math.abs(targetY - currentY) > .25) {
+        frame = requestAnimationFrame(paint);
+      } else {
+        frame = 0;
+      }
     };
     const move = (event: PointerEvent) => {
-      x = event.clientX / innerWidth * 100;
-      y = event.clientY / innerHeight * 100;
+      const rect = chapter.getBoundingClientRect();
+      targetX = Math.max(0, Math.min(rect.width, event.clientX - rect.left));
+      targetY = Math.max(0, Math.min(rect.height, event.clientY - rect.top));
       if (!frame) frame = requestAnimationFrame(paint);
     };
+    chapter.style.setProperty("--mx", `${currentX}px`);
+    chapter.style.setProperty("--my", `${currentY}px`);
     window.addEventListener("pointermove", move, { passive: true });
     return () => {
       window.removeEventListener("pointermove", move);
