@@ -176,3 +176,7 @@ footer{padding:120px 8vw 45px;min-height:75vh;display:grid;grid-template-columns
 .hero-copy{position:relative;left:auto;top:auto;bottom:auto;margin:calc(27vh - 65px) 0 0 13vw}
 .hero-bridge-image{margin-top:0}
 @media(max-width:800px){.hero{min-height:0;padding:65px 24px 50px}.hero-copy{left:auto;top:auto;bottom:auto;margin:calc(24vh - 65px) 0 0}.hero-bridge-image{margin-top:0}}
+
+/* Stable, high-contrast cursor without costly live backdrop filtering. */
+.cursor-system{display:none}
+@media(hover:hover) and (pointer:fine){.cursor-lens,.cursor-halo{will-change:transform;contain:layout paint}.cursor-lens{border:2px solid rgba(235,246,255,.95);background:rgba(2,16,36,.16);backdrop-filter:none;box-shadow:inset 0 0 0 1px rgba(84,131,179,.38),0 0 0 1px rgba(2,16,36,.28),0 8px 24px rgba(0,0,0,.22)}.cursor-halo{border-color:rgba(125,160,202,.48);box-shadow:0 0 24px rgba(84,131,179,.2)}.cursor-lens.visible{opacity:1}.cursor-halo.visible{opacity:.82}}

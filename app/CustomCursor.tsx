@@ -15,7 +15,6 @@ export default function CustomCursor() {
     const haloNode = halo.current;
     if (!lensNode || !haloNode) return;
 
-    document.documentElement.classList.add("custom-cursor-active");
     let targetX = innerWidth / 2;
     let targetY = innerHeight / 2;
     let lensX = targetX;
@@ -30,8 +29,15 @@ export default function CustomCursor() {
       targetY = event.clientY;
       if (!visible) {
         visible = true;
+        lensX = targetX;
+        lensY = targetY;
+        haloX = targetX;
+        haloY = targetY;
+        lensNode.style.transform = `translate3d(${lensX}px,${lensY}px,0) translate(-50%,-50%)`;
+        haloNode.style.transform = `translate3d(${haloX}px,${haloY}px,0) translate(-50%,-50%)`;
         lensNode.classList.add("visible");
         haloNode.classList.add("visible");
+        document.documentElement.classList.add("custom-cursor-active");
       }
       const interactive = (event.target as Element | null)?.closest("a,button,input,textarea,label,[role='button']");
       lensNode.classList.toggle("interactive", Boolean(interactive));
@@ -41,8 +47,8 @@ export default function CustomCursor() {
       visible = false;
       lensNode.classList.remove("visible", "interactive");
       haloNode.classList.remove("visible", "interactive");
+      document.documentElement.classList.remove("custom-cursor-active");
     };
-    const enter = () => { visible = true; };
     const render = () => {
       lensX += (targetX - lensX) * .28;
       lensY += (targetY - lensY) * .28;
@@ -53,16 +59,14 @@ export default function CustomCursor() {
       frame = requestAnimationFrame(render);
     };
 
-    document.addEventListener("pointermove", move, { passive: true });
+    window.addEventListener("pointermove", move, { passive: true });
     document.documentElement.addEventListener("mouseleave", leave);
-    document.documentElement.addEventListener("mouseenter", enter);
     render();
 
     return () => {
       cancelAnimationFrame(frame);
-      document.removeEventListener("pointermove", move);
+      window.removeEventListener("pointermove", move);
       document.documentElement.removeEventListener("mouseleave", leave);
-      document.documentElement.removeEventListener("mouseenter", enter);
       document.documentElement.classList.remove("custom-cursor-active");
     };
   }, []);

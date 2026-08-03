@@ -58,13 +58,36 @@ function Reveal({ children, className = "" }: { children: React.ReactNode; class
 
 export default function Home() {
   const [menu, setMenu] = useState(false);
-  const [pointer, setPointer] = useState({ x: 50, y: 38 });
   const [sent, setSent] = useState(false);
   const [theme, setTheme] = useState<Theme>("momo");
   const [typeface, setTypeface] = useState<Typeface>("syne");
   const [drawerOpen, setDrawerOpen] = useState(false);
   const upperPillars = useRef<HTMLDivElement>(null);
   const lowerPillars = useRef<HTMLDivElement>(null);
+  const heroChapter = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const chapter = heroChapter.current;
+    if (!chapter) return;
+    let frame = 0;
+    let x = 50;
+    let y = 38;
+    const paint = () => {
+      chapter.style.setProperty("--mx", `${x}%`);
+      chapter.style.setProperty("--my", `${y}%`);
+      frame = 0;
+    };
+    const move = (event: PointerEvent) => {
+      x = event.clientX / innerWidth * 100;
+      y = event.clientY / innerHeight * 100;
+      if (!frame) frame = requestAnimationFrame(paint);
+    };
+    window.addEventListener("pointermove", move, { passive: true });
+    return () => {
+      window.removeEventListener("pointermove", move);
+      cancelAnimationFrame(frame);
+    };
+  }, []);
 
   useEffect(() => {
     const saved = (localStorage.getItem("io8-theme") || localStorage.getItem("1o8-theme")) as Theme | null;
@@ -153,7 +176,7 @@ export default function Home() {
   const connectionLoop = Array.from({ length: 3 }, () => pillars.slice(4)).flat();
 
   return (
-    <main data-theme={theme} data-font={typeface} onMouseMove={(e) => setPointer({ x: e.clientX / innerWidth * 100, y: e.clientY / innerHeight * 100 })}>
+    <main data-theme={theme} data-font={typeface}>
       <CustomCursor />
       <div className="grain" aria-hidden />
       <button
@@ -219,7 +242,7 @@ export default function Home() {
         </div>
       </nav>
 
-      <div className="hero-chapter" style={{"--mx": `${pointer.x}%`, "--my": `${pointer.y}%`} as React.CSSProperties}>
+      <div ref={heroChapter} className="hero-chapter">
       <section className="hero">
         <div className="ambient" aria-hidden />
         <div className="hero-index">Private members&apos; circle<br />India · Est. 2026</div>
