@@ -65,10 +65,12 @@ export default function Home() {
   const upperPillars = useRef<HTMLDivElement>(null);
   const lowerPillars = useRef<HTMLDivElement>(null);
   const heroChapter = useRef<HTMLDivElement>(null);
+  const heroHalo = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     const chapter = heroChapter.current;
-    if (!chapter) return;
+    const halo = heroHalo.current;
+    if (!chapter || !halo) return;
     let frame = 0;
     let currentX = chapter.clientWidth * .5;
     let currentY = Math.min(innerHeight * .38, chapter.clientHeight * .3);
@@ -77,8 +79,7 @@ export default function Home() {
     const paint = () => {
       currentX += (targetX - currentX) * .12;
       currentY += (targetY - currentY) * .12;
-      chapter.style.setProperty("--mx", `${currentX}px`);
-      chapter.style.setProperty("--my", `${currentY}px`);
+      halo.style.transform = `translate3d(${currentX}px,${currentY}px,0) translate(-50%,-50%)`;
       if (Math.abs(targetX - currentX) > .25 || Math.abs(targetY - currentY) > .25) {
         frame = requestAnimationFrame(paint);
       } else {
@@ -91,8 +92,7 @@ export default function Home() {
       targetY = Math.max(0, Math.min(rect.height, event.clientY - rect.top));
       if (!frame) frame = requestAnimationFrame(paint);
     };
-    chapter.style.setProperty("--mx", `${currentX}px`);
-    chapter.style.setProperty("--my", `${currentY}px`);
+    halo.style.transform = `translate3d(${currentX}px,${currentY}px,0) translate(-50%,-50%)`;
     window.addEventListener("pointermove", move, { passive: true });
     return () => {
       window.removeEventListener("pointermove", move);
@@ -254,6 +254,7 @@ export default function Home() {
       </nav>
 
       <div ref={heroChapter} className="hero-chapter">
+      <div ref={heroHalo} className="hero-halo" aria-hidden="true" />
       <section className="hero">
         <div className="ambient" aria-hidden />
         <div className="hero-index">Private members&apos; circle<br />India · Est. 2026</div>
