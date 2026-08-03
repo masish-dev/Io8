@@ -344,6 +344,21 @@ export default function Home() {
         <Reveal><h2 className="gold">Only trust.</h2></Reveal>
       </section>
 
+      <section className="brand-interlude" aria-label="Io8 gold emblem collection">
+        <div className="brand-interlude-frame">
+          <img
+            src="/io8-gold-emblem-pattern.png"
+            alt="A collection of precision-crafted gold Io8 emblems on a dark surface"
+            loading="lazy"
+            decoding="async"
+          />
+          <div className="brand-interlude-caption" aria-hidden="true">
+            <span>Io8</span>
+            <span>Private by design</span>
+          </div>
+        </div>
+      </section>
+
       <section className="invitation" id="invitation">
         <Reveal className="invite-copy">
           <div className="section-label">05 / Invitation</div>

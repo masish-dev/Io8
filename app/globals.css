@@ -190,3 +190,11 @@ footer{padding:120px 8vw 45px;min-height:75vh;display:grid;grid-template-columns
 .hero-halo{position:absolute;left:0;top:0;z-index:0;width:620px;height:520px;border-radius:50%;pointer-events:none;background:radial-gradient(ellipse at center,color-mix(in srgb,var(--bright) 11%,transparent) 0%,color-mix(in srgb,var(--bright) 6%,transparent) 34%,color-mix(in srgb,var(--surface) 2%,transparent) 58%,transparent 78%);will-change:transform;transform:translate3d(50vw,38vh,0) translate(-50%,-50%);contain:strict}.hero-chapter .hero{z-index:1}
 @media(max-width:800px),(pointer:coarse),(prefers-reduced-motion:reduce){.hero-halo{display:none}}
 .grain{opacity:.025;background-size:148px 148px}
+
+/* Gold Io8 brand interlude before the invitation. */
+.brand-interlude{padding:0 2vw 2vw;background:var(--surface)}
+.brand-interlude-frame{position:relative;height:clamp(480px,62vw,900px);overflow:hidden;background:#0b0b09}
+.brand-interlude-frame::after{content:"";position:absolute;inset:0;pointer-events:none;background:linear-gradient(180deg,rgba(0,0,0,.08),transparent 52%,rgba(0,0,0,.36));box-shadow:inset 0 0 90px rgba(0,0,0,.24)}
+.brand-interlude-frame img{display:block;width:100%;height:100%;object-fit:cover;object-position:center;filter:saturate(.9) contrast(1.04)}
+.brand-interlude-caption{position:absolute;z-index:1;left:32px;right:32px;bottom:26px;display:flex;justify-content:space-between;align-items:center;color:rgba(255,238,194,.78);font-size:8px;letter-spacing:.24em;text-transform:uppercase}
+@media(max-width:800px){.brand-interlude{padding:0 12px 12px}.brand-interlude-frame{height:68vh;min-height:500px}.brand-interlude-caption{left:18px;right:18px;bottom:18px}}
