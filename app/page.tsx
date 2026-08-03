@@ -101,8 +101,8 @@ export default function Home() {
   }, []);
 
   useEffect(() => {
-    const saved = (localStorage.getItem("io8-theme") || localStorage.getItem("1o8-theme")) as Theme | null;
-    const savedTypeface = (localStorage.getItem("io8-typeface") || localStorage.getItem("1o8-typeface")) as Typeface | null;
+    const saved = localStorage.getItem("io8-theme") as Theme | null;
+    const savedTypeface = localStorage.getItem("io8-typeface") as Typeface | null;
     if (saved && themes.some((item) => item.id === saved)) setTheme(saved);
     if (savedTypeface && typefaces.some((item) => item.id === savedTypeface)) setTypeface(savedTypeface);
   }, []);
