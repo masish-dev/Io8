@@ -184,3 +184,7 @@ footer{padding:120px 8vw 45px;min-height:75vh;display:grid;grid-template-columns
 /* Stable, high-contrast cursor without costly live backdrop filtering. */
 .cursor-system{display:none}
 @media(hover:hover) and (pointer:fine){.cursor-system{display:block}.cursor-lens,.cursor-halo{will-change:transform;contain:layout paint}.cursor-lens{border:2px solid rgba(235,246,255,.95);background:rgba(2,16,36,.16);backdrop-filter:none;box-shadow:inset 0 0 0 1px rgba(84,131,179,.38),0 0 0 1px rgba(2,16,36,.28),0 8px 24px rgba(0,0,0,.22)}.cursor-halo{border-color:rgba(125,160,202,.48);box-shadow:0 0 24px rgba(84,131,179,.2)}.cursor-lens.visible{opacity:1}.cursor-halo.visible{opacity:.82}}
+
+/* Smooth, wide-gamut hero blend without fixed-background raster banding. */
+.hero-chapter{background-image:radial-gradient(ellipse 92vw 82vh at var(--mx,50%) var(--my,38%),color-mix(in srgb,var(--bright) 15%,transparent) 0%,color-mix(in srgb,var(--bright) 9%,transparent) 28%,color-mix(in srgb,var(--surface) 4%,transparent) 50%,transparent 74%),linear-gradient(145deg,var(--hero-b) 0%,color-mix(in srgb,var(--hero-b) 70%,var(--hero-a)) 38%,var(--hero-a) 68%,color-mix(in srgb,var(--surface) 74%,var(--hero-a)) 100%);background-attachment:scroll,scroll;background-repeat:no-repeat}
+.grain{opacity:.025;background-size:148px 148px}
