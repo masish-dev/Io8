@@ -171,6 +171,10 @@ footer{padding:120px 8vw 45px;min-height:75vh;display:grid;grid-template-columns
 .image-card-label span{font-size:22.8px}
 @media(max-width:800px){.pillar-rail.upper,.pillar-rail.lower{height:470px}.pillar-card{flex-basis:76vw;height:470px;min-height:470px;max-height:470px}.text-card .pillar-card-copy h3{font-size:53px}.image-card-label h3{font-size:45px}.text-card .pillar-card-copy p{font-size:13.2px}}
 
+/* Responsive portrait-card typography for phones. */
+@media(max-width:800px){.text-card .pillar-card-copy{inset:0;padding:clamp(20px,6vw,28px);grid-template-columns:1fr;gap:0;align-content:center}.text-card .pillar-card-copy span{grid-row:auto;font-size:clamp(20px,6vw,28px);padding:0 0 14px}.text-card .pillar-card-copy h3{font-size:clamp(34px,11vw,53px);line-height:.92;overflow-wrap:anywhere}.text-card .pillar-card-copy p{grid-column:1;font-size:clamp(11px,3.35vw,13.2px);line-height:1.55;max-width:none;margin:18px 0}.text-card .pillar-card-copy i{grid-column:1;font-size:clamp(7px,2.2vw,8.75px);margin-top:4px}.image-card-label{left:clamp(18px,6vw,24px);right:clamp(18px,6vw,24px);bottom:clamp(18px,6vw,24px)}.image-card-label h3{font-size:clamp(30px,10vw,45px);line-height:.94;overflow-wrap:anywhere}.image-card-label span{font-size:clamp(17px,5vw,22px)}}
+@media(max-width:380px){.pillar-card{flex-basis:80vw}.text-card .pillar-card-copy h3{font-size:clamp(31px,10vw,39px)}.text-card .pillar-card-copy p{font-size:11px}}
+
 /* Keep the hero copy-to-image rhythm identical at every viewport and zoom. */
 .hero{height:auto;min-height:0;padding:65px 5vw 50px}
 .hero-copy{position:relative;left:auto;top:auto;bottom:auto;margin:calc(27vh - 65px) 0 0 13vw}
