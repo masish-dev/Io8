@@ -79,25 +79,74 @@ export default function Home() {
   }, [theme, typeface]);
 
   useEffect(() => {
+    const preservePillarHeight = () => {
+      const zoom = Math.max(.5, Math.min(2, window.outerWidth / window.innerWidth));
+      document.documentElement.style.setProperty("--pillar-card-height", `${580 / zoom}px`);
+      document.documentElement.style.setProperty("--pillar-rail-height", `${580 / zoom}px`);
+    };
+    preservePillarHeight();
+    window.addEventListener("resize", preservePillarHeight);
+    window.visualViewport?.addEventListener("resize", preservePillarHeight);
+    return () => {
+      window.removeEventListener("resize", preservePillarHeight);
+      window.visualViewport?.removeEventListener("resize", preservePillarHeight);
+    };
+  }, []);
+
+  useEffect(() => {
     const upper = upperPillars.current;
     const lower = lowerPillars.current;
     if (!upper || !lower) return;
 
-    const cardStep = () => {
-      const card = upper.firstElementChild as HTMLElement | null;
-      return card ? card.getBoundingClientRect().width + 16 : innerWidth * .5;
+    const cardStep = (element: HTMLDivElement) => {
+      const card = element.firstElementChild as HTMLElement | null;
+      return card ? card.getBoundingClientRect().width + 16 : element.clientWidth / 1.5;
     };
-    upper.scrollLeft = upper.scrollWidth / 3;
-    lower.scrollLeft = lower.scrollWidth * 2 / 3;
+    const centerLoops = () => {
+      upper.scrollLeft = upper.scrollWidth / 3;
+      lower.scrollLeft = lower.scrollWidth * 2 / 3;
+    };
+    centerLoops();
 
-    const timer = window.setInterval(() => {
+    const frames: number[] = [];
+    const animateBothRails = () => {
+      const upperStart = upper.scrollLeft;
+      const lowerStart = lower.scrollLeft;
+      const upperDistance = cardStep(upper);
+      const lowerDistance = cardStep(lower);
+      const startedAt = performance.now();
+      const duration = 1000;
+      const tick = (now: number) => {
+        const progress = Math.min(1, (now - startedAt) / duration);
+        const eased = progress < .5
+          ? 4 * progress * progress * progress
+          : 1 - Math.pow(-2 * progress + 2, 3) / 2;
+        upper.scrollLeft = upperStart + upperDistance * eased;
+        lower.scrollLeft = lowerStart - lowerDistance * eased;
+        if (progress < 1) frames.push(requestAnimationFrame(tick));
+      };
+      frames.push(requestAnimationFrame(tick));
+    };
+
+    const advance = () => {
       if (upper.scrollLeft >= upper.scrollWidth * 2 / 3) upper.scrollTo({ left: upper.scrollWidth / 3, behavior: "auto" });
       if (lower.scrollLeft <= lower.scrollWidth / 3) lower.scrollTo({ left: lower.scrollWidth * 2 / 3, behavior: "auto" });
-      upper.scrollBy({ left: cardStep(), behavior: "smooth" });
-      lower.scrollBy({ left: -cardStep(), behavior: "smooth" });
-    }, 2700);
+      animateBothRails();
+    };
+    let timer = 0;
+    const starter = window.setTimeout(() => {
+      advance();
+      timer = window.setInterval(advance, 3000);
+    }, 2000);
+    const resizeObserver = new ResizeObserver(centerLoops);
+    resizeObserver.observe(upper);
 
-    return () => window.clearInterval(timer);
+    return () => {
+      window.clearTimeout(starter);
+      window.clearInterval(timer);
+      resizeObserver.disconnect();
+      frames.forEach(cancelAnimationFrame);
+    };
   }, []);
 
   const foundationLoop = Array.from({ length: 3 }, () => pillars.slice(0, 4)).flat();

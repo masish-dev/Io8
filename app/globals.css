@@ -143,3 +143,30 @@ footer{padding:120px 8vw 45px;min-height:75vh;display:grid;grid-template-columns
 /* Tight hero-to-image transition */
 .hero-bridge-image{margin-top:-28vh;margin-left:auto;margin-right:auto;background-position:center center}
 @media(max-width:800px){.hero-bridge-image{margin-top:-12vh;margin-left:auto;margin-right:auto;background-position:center center}}
+
+/* Pillar framing: one complete card plus a precise half-card preview */
+.pillar-rail{scroll-snap-type:none}
+.pillar-card{flex-basis:calc((100% - 16px)/1.5);scroll-snap-align:none}
+.pillar-rail.lower{padding-left:8vw}
+@media(max-width:800px){.pillar-card{flex-basis:calc((100% - 16px)/1.5);height:clamp(230px,43vw,300px);min-height:230px}.pillar-rail.lower{padding-left:24px}}
+
+/* Fixed and equal rail height at every browser zoom level */
+.pillar-slider{margin-bottom:16px}
+.pillar-rail{padding-bottom:0}
+.pillar-rail.upper,.pillar-rail.lower{height:var(--pillar-rail-height,580px)}
+.pillar-card{height:var(--pillar-card-height,580px);min-height:var(--pillar-card-height,580px);max-height:var(--pillar-card-height,580px)}
+@media(max-width:800px){.lower-slider{margin-top:0}.pillar-rail.upper,.pillar-rail.lower{height:270px}.pillar-card{height:270px;min-height:270px;max-height:270px}}
+
+/* Pillar typography scale and clean slider ground */
+.pillars{background:var(--ink)}
+.pillar-sliders,.pillar-slider,.pillar-rail{background:transparent}
+.pillar-card-copy p{font-size:12px}
+.text-card .pillar-card-copy p{font-size:13.2px}
+.pillar-card-copy h3{font-size:clamp(43px,4.8vw,70px)}
+.text-card .pillar-card-copy h3{font-size:clamp(55px,6vw,86px)}
+.image-card-label h3{font-size:clamp(41px,4.56vw,65px)}
+.pillar-card-copy i{font-size:8.75px}
+.pillar-card-copy span{font-size:24px}
+.text-card .pillar-card-copy span{font-size:32.4px}
+.image-card-label span{font-size:22.8px}
+@media(max-width:800px){.pillar-rail.upper,.pillar-rail.lower{height:470px}.pillar-card{flex-basis:76vw;height:470px;min-height:470px;max-height:470px}.text-card .pillar-card-copy h3{font-size:53px}.image-card-label h3{font-size:45px}.text-card .pillar-card-copy p{font-size:13.2px}}
