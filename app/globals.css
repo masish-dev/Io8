@@ -170,3 +170,9 @@ footer{padding:120px 8vw 45px;min-height:75vh;display:grid;grid-template-columns
 .text-card .pillar-card-copy span{font-size:32.4px}
 .image-card-label span{font-size:22.8px}
 @media(max-width:800px){.pillar-rail.upper,.pillar-rail.lower{height:470px}.pillar-card{flex-basis:76vw;height:470px;min-height:470px;max-height:470px}.text-card .pillar-card-copy h3{font-size:53px}.image-card-label h3{font-size:45px}.text-card .pillar-card-copy p{font-size:13.2px}}
+
+/* Keep the hero copy-to-image rhythm identical at every viewport and zoom. */
+.hero{height:auto;min-height:0;padding:65px 5vw 50px}
+.hero-copy{position:relative;left:auto;top:auto;bottom:auto;margin:calc(27vh - 65px) 0 0 13vw}
+.hero-bridge-image{margin-top:0}
+@media(max-width:800px){.hero{min-height:0;padding:65px 24px 50px}.hero-copy{left:auto;top:auto;bottom:auto;margin:calc(24vh - 65px) 0 0}.hero-bridge-image{margin-top:0}}
