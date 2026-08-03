@@ -41,3 +41,5 @@ next-env.d.ts
 /.wrangler/
 /outputs/
 /work/
+/.openai/dev.stderr.log
+/.openai/dev.stdout.log
