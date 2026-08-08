@@ -153,8 +153,8 @@ footer{padding:120px 8vw 45px;min-height:75vh;display:grid;grid-template-columns
 /* Fixed and equal rail height at every browser zoom level */
 .pillar-slider{margin-bottom:16px}
 .pillar-rail{padding-bottom:0}
-.pillar-rail.upper,.pillar-rail.lower{height:var(--pillar-rail-height,580px)}
-.pillar-card{height:var(--pillar-card-height,580px);min-height:var(--pillar-card-height,580px);max-height:var(--pillar-card-height,580px)}
+.pillar-rail.upper,.pillar-rail.lower{height:var(--pillar-rail-height,500px)}
+.pillar-card{height:min(var(--pillar-card-height,500px),500px);min-height:min(var(--pillar-card-height,500px),500px);max-height:500px}
 @media(max-width:800px){.lower-slider{margin-top:0}.pillar-rail.upper,.pillar-rail.lower{height:270px}.pillar-card{height:270px;min-height:270px;max-height:270px}}
 
 /* Pillar typography scale and clean slider ground */
