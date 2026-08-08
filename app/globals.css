@@ -191,6 +191,14 @@ footer{padding:120px 8vw 45px;min-height:75vh;display:grid;grid-template-columns
 @media(max-width:800px),(pointer:coarse),(prefers-reduced-motion:reduce){.hero-halo{display:none}}
 .grain{opacity:.025;background-size:148px 148px}
 
+/* Fit both desktop pillar rails inside one viewport with the card-gap rhythm. */
+@media(min-width:801px){
+  .pillar-sliders{--pillar-row-height:min(500px,calc((100svh - 16px)/2))}
+  .pillar-slider{margin-bottom:16px}
+  .pillar-rail.upper,.pillar-rail.lower{height:var(--pillar-row-height)}
+  .pillar-card{height:var(--pillar-row-height);min-height:var(--pillar-row-height);max-height:var(--pillar-row-height)}
+}
+
 /* Gold Io8 brand interlude before the invitation. */
 .brand-interlude{padding:0 2vw 2vw;background:var(--surface)}
 .brand-interlude-frame{position:relative;height:clamp(480px,62vw,900px);overflow:hidden;background:#0b0b09}
