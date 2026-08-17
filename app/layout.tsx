@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import "./globals.css";
+import ThemeEditor from "./ThemeEditor";
 
 export const metadata: Metadata = {
   title: "Io8 — Private Members' Circle",
@@ -8,5 +9,5 @@ export const metadata: Metadata = {
 };
 
 export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
-  return <html lang="en"><body>{children}</body></html>;
+  return <html lang="en" data-theme="momo" data-font="syne"><body><ThemeEditor />{children}</body></html>;
 }
